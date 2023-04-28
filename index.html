@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script_cv.js" defer></script>
+    <script src="script_item.js" defer></script>
+    <script src="drag_and_drop.js" defer></script>
+    <title>ASSIGNMENT DEALER</title>
+</head>
+<body>
+    <div id="loader">
+        <div class="loading-text">Loading</div>
+        <div class="loading-info" id="assignment-db" hidden="hidden">Fetching data from the database</div>
+        <div class="loading-info" id="assignment-mcv" hidden="hidden">Fetching <span id="assignment-no"></span> assignments from <span id="course-no"></span> courses</div>
+    </div>
+    <div id="start-app"></div>
+    <div id="login-first">
+        <p id="login-text">Please login first</p>
+        <button id="login-button" onclick=authorizeApplication();>Login</button>
+    </div>
+    <!-- <button onclick=getUserID()>USER ID</button>
+    <button onclick=getItemsTest()>TEST GET</button>
+    <button onclick=deleteAll()>DELETE ALL</button>
+    <button onclick=postAllItems()>POST ALL</button> -->
+    <div id="header">
+        <p id="insert-name-here"></p>
+        <p class="between">|</p>
+        <p class="logout-button" onclick=logout()>Logout</p>
+        <p class="between">|</p>
+        <p class="fetch" onclick=postAllItems()>Fetch Data</p>
+    </div>
+    <h1 id="app-name">ASSIGNMENT DEALER</h1>
+    <div class="container">
+        <div class="assignment">
+            <div class="all-box">
+                <div id="stripe"></div>
+                <h2 id="header-box">All Assignment</h2><br>
+            </div>
+            <div class="ongoing-box">
+                <div id="stripe"></div>
+                <h2 id="header-box">Ongoing Assignment</h2><br>
+            </div>
+            <div class="done-box">
+                <div id="stripe"></div>
+                <h2 id="header-box">Done Assignment</h2><br>
+            </div>
+        </div> 
+        <div class="deleted-box">
+            <h2 id="header-box-deleted">Deleted Items (click to restore):</h2><br>
+        </div>
+    </div>
+</body>
