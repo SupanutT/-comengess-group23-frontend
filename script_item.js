@@ -299,6 +299,19 @@ const postAllItems = async() => {
 
     container.style.display = "block"
     assignmentMCV.setAttribute("hidden", "hidden")
+
+    loader(2);
+
+    loader(0);
+    container.style.display = "none"
+    userid = await getUserID();
+    console.log(userid);
+
+    loader(1);
+    await getItems(userid);
+    container.style.display = "block"
+    await reload();
+
     loader(2);
   }
 
