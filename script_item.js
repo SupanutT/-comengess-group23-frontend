@@ -4,7 +4,10 @@ var intervalId = null;
 var login = false;
 var userFullName = '';
 var dotCounter = 0
+const popup = document.getElementById("popup");
 const container = document.querySelector('.container');
+const closeBtn = document.getElementsByClassName("close")[0];
+const popupForm = document.getElementById('chat-form')
 
 window.onload = async () => {
   loader(0);
@@ -103,6 +106,12 @@ const reload = async () =>{
       buttonAll.id = "move-to-all";
       buttonAll.onclick = () => changeStatusDB("all", item.item_id);
       buttonAll.innerHTML = "MOVE TO ALL";
+
+      const buttonChat = document.createElement('button');
+      buttonChat.id = "chat-button"
+      buttonChat.onclick = () => popupDiv(item);
+      buttonChat.innerHTML = "CHAT"
+
       const buttonDiv = document.createElement('div');
       buttonDiv.className = "buttons"
       if (item.due_date*1000 < currentDate){
@@ -137,6 +146,7 @@ const reload = async () =>{
         contentBox.appendChild(buttonDiv);
         doneBox.appendChild(contentBox);
       }
+      buttonDiv.appendChild(buttonChat);
     }
   });
   const nothing1 = document.createElement('div');
@@ -211,6 +221,7 @@ var intervalId = setInterval(() => {
       if(item.status!="deleted") updateTimeLeft(item);
     } catch (err) {
       console.log(err)
+      console.log(item)
     }
   })
 }, 1000);
@@ -318,6 +329,7 @@ const postAllItems = async() => {
 const postItem = async(itemid, title, cv_cid, course_name, duetime, status) => {
   const itemToAdd = {
     userid: userid,
+    userFullName: userFullName,
     itemid: itemid,
     title: title,
     cv_cid: cv_cid,
@@ -368,7 +380,11 @@ const changeStatusDB = async (status, item_id) => {
 
   intervalId = setInterval(() => {
     itemsData.items.map((item) => {
-      if(item.status!="deleted") updateTimeLeft(item);
+      try {
+        if(item.status!="deleted") updateTimeLeft(item);
+      } catch (err) {
+        console.log(err)
+      }
     })
   }, 1000);
   
