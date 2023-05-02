@@ -1,26 +1,23 @@
-var itemsData = { items : [] };
-var userid = '';
-var intervalId = null;
-var login = false;
-var userFullName = '';
-var dotCounter = 0
-const popup = document.getElementById("popup");
-const container = document.querySelector('.container');
-const closeBtn = document.getElementsByClassName("close")[0];
-const popupForm = document.getElementById('chat-form')
-
 window.onload = async () => {
   loader(0);
   container.style.display = "none"
+  loadingInfo.removeAttribute("hidden")
   userid = await getUserID();
-  console.log(userid);
 
   loader(1);
-  await getItems(userid);
+  await getUserInfoFromDB();
+  await getCoursesFromMCV();
+  if (!isUserInDB) {
+    await addNewUserInfoToDB()
+  }
+  await addNewItemsFromMCV();
+  await getAllItemsInDB();
+  loadingInfo.setAttribute("hidden", "hidden")
   container.style.display = "block"
   await reload();
 
   loader(2);
+  clearInterval(loadingIntervalId)
 }
 
 const reload = async () =>{
@@ -32,6 +29,8 @@ const reload = async () =>{
   const ongoingBox = document.getElementsByClassName("ongoing-box")[0];
   const doneBox = document.getElementsByClassName("done-box")[0];
   const deletedBox = document.getElementsByClassName("deleted-box")[0];
+  const recentlyDeletedBox = document.getElementById("recently-deleted");
+  const longAgoDeletedBox = document.getElementById("long-ago-deleted");
   while (allBox.childElementCount!=2) {
     allBox.removeChild(allBox.lastChild);
   }
@@ -41,18 +40,69 @@ const reload = async () =>{
   while (doneBox.childElementCount!=2) {
     doneBox.removeChild(doneBox.lastChild);
   }
-  while (deletedBox.childElementCount!=1) {
-    deletedBox.removeChild(deletedBox.lastChild);
+  while (recentlyDeletedBox.childElementCount!=1) {
+    recentlyDeletedBox.removeChild(recentlyDeletedBox.lastChild);
+  }
+  while (longAgoDeletedBox.childElementCount!=1) {
+    longAgoDeletedBox.removeChild(longAgoDeletedBox.lastChild);
+  }
+  for (let cv_cid in courseData) {
+    let newCourseDataBox = document.createElement('div');
+    newCourseDataBox.classList = ['deleted-subject'];
+    newCourseDataBox.id = `deleted-subject-${cv_cid}`
+
+    let courseDataBoxHeader = document.createElement('div')
+    courseDataBoxHeader.classList = ['box-header-long-ago']
+
+    let headerBoxLongAgo = document.createElement('h2')
+    headerBoxLongAgo.classList = ['box-header-long-ago-text']
+    headerBoxLongAgo.innerHTML = `${courseData[cv_cid].course_no} - ${courseData[cv_cid].title}`
+
+    let headerBoxLongAgoDiv = document.createElement('div')
+
+    let iconNav = document.createElement('div')
+    iconNav.classList = ['iconNav-deleted']
+    iconNav.classList.add('open')
+    iconNav.innerHTML = `<span></span><span></span><span></span>`
+    iconNav.addEventListener('click', (event) => {
+      iconNav.classList.toggle("open")
+      if (iconNav.classList.contains("open")) {
+        courseDataBoxBody.style.display = 'block'
+      } else {
+        courseDataBoxBody.style.display = 'none'
+      }
+    })
+
+    let courseDataBoxBody = document.createElement('div')
+    courseDataBoxBody.id = `course-data-box-body-${cv_cid}`
+    headerBoxLongAgoDiv.appendChild(headerBoxLongAgo)
+    courseDataBoxHeader.appendChild(headerBoxLongAgoDiv)
+    courseDataBoxHeader.appendChild(iconNav)
+    newCourseDataBox.appendChild(courseDataBoxHeader)
+    newCourseDataBox.appendChild(courseDataBoxBody)
+    //newCourseDataBox.innerHTML = `<h2 class="header-box-long-ago">${courseData[cv_cid].course_no} - ${courseData[cv_cid].title}</h2><br>`
+
+    newCourseDataBox.setAttribute("hidden", "hidden")
+    longAgoDeletedBox.appendChild(newCourseDataBox)
   }
   itemsData.items.sort((a, b) => a.due_date - b.due_date);
   const currentDate = new Date();
   itemsData.items.map((item) => {
-    if(item.status=="deleted"){
+    if(item.status==="deleted"){
       const assignmentTitle = document.createElement('button');
       assignmentTitle.className = "content-title-deleted";
       assignmentTitle.innerHTML = `<h3>${item.title}</h3>`;
       assignmentTitle.onclick = () => changeStatusDB("all", item.item_id);
-      deletedBox.appendChild(assignmentTitle);
+      if (Date.now() - item.due_date * 1000 < 5 * 24 * 60 * 60 * 1000){
+        recentlyDeletedBox.appendChild(assignmentTitle);
+      }
+      else{
+        console.log(`deleted-subject-${item.cv_cid}`)
+        let courseDataBox = document.getElementById(`deleted-subject-${item.cv_cid}`)
+        let courseDataBoxBody = document.getElementById(`course-data-box-body-${item.cv_cid}`)
+        courseDataBox.removeAttribute("hidden")
+        courseDataBoxBody.appendChild(assignmentTitle);
+      }
     }
     else{
       const contentBox = document.createElement('div');
@@ -171,25 +221,42 @@ const loader = (x) => {
     document.getElementById("start-app").style.display = "block";
     document.getElementById("login-button").style.display = "block";
     document.getElementById("login-text").style.display = "block";
+    document.getElementById("welcome").style.display = "block";
   }
   else if(x===1){
     document.getElementById("loader").style.display = "block";
     document.getElementById("start-app").style.display = "block";
     document.getElementById("login-button").style.display = "none";
     document.getElementById("login-text").style.display = "none";
+    document.getElementById("welcome").style.display = "none";
   }
   else{
     document.getElementById("loader").style.display = "none";
     document.getElementById("start-app").style.display = "none";
     document.getElementById("login-button").style.display = "none";
     document.getElementById("login-text").style.display = "none";
+    document.getElementById("welcome").style.display = "none";
   }
 }
-// //delete and reload fuction
-// const deleteAndReload = async(itemid) =>{
-//   await deleteItem(itemid);
-//   reload();
-// }
+const getUserName = async () => {
+  let userName = '';
+
+  const options = {
+    method: "GET",
+    credentials: "include"
+  }
+
+  await fetch(`http://${backendIPAddress}/courseville/get_profile_info`, options)
+    .then((response) => response.json())
+    .then((data) => {
+      userName = data.user.firstname_en+" "+data.user.lastname_en
+      console.log(data.user.firstname_en+" "+data.user.lastname_en)
+      console.log(data)
+    })
+    .catch((err) => console.error(err))
+
+    return userName
+}
 
 const updateTimeLeft = (item) => {
   const assignmentTimeLeft = document.getElementById(`TimeLeft-${item.itemid}`)
@@ -215,31 +282,9 @@ const updateTimeLeft = (item) => {
   if(timeLeft<0) assignmentTimeLeft.innerHTML = `Time left: <span style="color:red;">Overdue</span>`
 }
 
-var intervalId = setInterval(() => {
-  itemsData.items.map((item) => {
-    try {
-      if(item.status!="deleted") updateTimeLeft(item);
-    } catch (err) {
-      console.log(err)
-      console.log(item)
-    }
-  })
-}, 1000);
-
-var LoadingIntervalId = setInterval(() => {
-  const loading_text = document.querySelector('.loading-text');
-  loading_text.textContent = "Loading" + ".".repeat(dotCounter)
-  dotCounter = (dotCounter + 1) % 4;
-},500)
-
-const getItems = async(userid) => {
-  const assignment_db = document.getElementById('assignment-db');
-
-  assignment_db.removeAttribute("hidden")
-
-  let fetchedData;
+const getAllItemsInDB = async() => {
+  loadingInfo.innerHTML = 'Loading data from the database'
   itemsData = { items : [] };
-
   const options = {
     method: "GET",
     credentials: "include"
@@ -248,7 +293,6 @@ const getItems = async(userid) => {
   await fetch(`http://${backendIPAddress}/items`, options)
     .then((response) => response.json())
     .then((data) => {
-      fetchedData = data
       data
         .filter((data) => data.userid === userid)
         .map((data) => {
@@ -265,68 +309,9 @@ const getItems = async(userid) => {
     })
     .catch((error) => console.error(error));
 
-    assignment_db.setAttribute("hidden", "hidden")
-  return fetchedData
 }
 
-const postAllItems = async() => {
-  loader(1);
-
-  const container = document.querySelector('.container');
-  const assignmentMCV = document.getElementById('assignment-mcv');
-  const assignmentNo = document.getElementById('assignment-no');
-  const courseNo = document.getElementById('course-no');
-
-  container.style.display = "none"
-
-  const courseData = await getCourses();
-  let itemsID = []
-
-  assignmentMCV.removeAttribute("hidden")
-  assignmentNo.textContent = 0
-  courseNo.textContent = Object.keys(courseData).length
-  
-  for (let i=0; i<itemsData.items.length; i++) {
-    itemsID.push(itemsData.items[i].itemid)
-  }
-
-  for (let cv_cid in courseData) {
-    let allAssignments = await getAssignments(cv_cid)
-    for (let itemid in allAssignments) {
-      let assignmentInfo = await getItemAssignment(itemid)
-      assignmentNo.textContent = parseInt(assignmentNo.textContent) + 1
-      if (Date.now() - assignmentInfo.duetime * 1000 < 5 * 24 * 60 * 60 * 1000 &&
-        !(itemsID.includes(itemid))) {
-        await postItem(
-          itemid,
-          assignmentInfo.title, 
-          cv_cid,
-          courseData[cv_cid].course_no,
-          assignmentInfo.duetime,
-          "all")
-        }
-      }
-    }
-
-    container.style.display = "block"
-    assignmentMCV.setAttribute("hidden", "hidden")
-
-    loader(2);
-
-    loader(0);
-    container.style.display = "none"
-    userid = await getUserID();
-    console.log(userid);
-
-    loader(1);
-    await getItems(userid);
-    container.style.display = "block"
-    await reload();
-
-    loader(2);
-  }
-
-const postItem = async(itemid, title, cv_cid, course_name, duetime, status) => {
+const addItemToDB = async(itemid, title, cv_cid, course_name, duetime, status) => {
   const itemToAdd = {
     userid: userid,
     userFullName: userFullName,
@@ -362,7 +347,7 @@ const deleteItem = async(item_id) => {
 }
 
 const changeStatusDB = async (status, item_id) => {
-  clearInterval(intervalId)
+  clearInterval(timeLeftIntervalId)
 
   const options = {
     method: "PUT",
@@ -375,10 +360,10 @@ const changeStatusDB = async (status, item_id) => {
     .then((response) => console.log(response))
     .catch((err) => console.log(err))
 
-  await getItems(userid)
+  await getAllItemsInDB();
   await reload()
 
-  intervalId = setInterval(() => {
+  timeLeftIntervalId = setInterval(() => {
     itemsData.items.map((item) => {
       try {
         if(item.status!="deleted") updateTimeLeft(item);
@@ -390,25 +375,22 @@ const changeStatusDB = async (status, item_id) => {
   
 }
 
-const getUserName = async () => {
-  let userName = '';
+timeLeftIntervalId = setInterval(() => {
+  itemsData.items.map((item) => {
+    try {
+      if(item.status!="deleted") updateTimeLeft(item);
+    } catch (err) {
+      console.log(err)
+      console.log(item)
+    }
+  })
+}, 1000);
 
-  const options = {
-    method: "GET",
-    credentials: "include"
-  }
-
-  await fetch(`http://${backendIPAddress}/courseville/get_profile_info`, options)
-    .then((response) => response.json())
-    .then((data) => {
-      userName = data.user.firstname_en+" "+data.user.lastname_en
-      console.log(data.user.firstname_en+" "+data.user.lastname_en)
-      console.log(data)
-    })
-    .catch((err) => console.error(err))
-
-    return userName
-}
+loadingIntervalId = setInterval(() => {
+  const loading_text = document.querySelector('.loading-text');
+  loading_text.textContent = "Loading" + ".".repeat(dotCounter)
+  dotCounter = (dotCounter + 1) % 4;
+},500)
 
 /* Utils */
 const getItemsTest = async() => {

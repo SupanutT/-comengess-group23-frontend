@@ -1,11 +1,3 @@
-const chatForm = document.getElementById('chat-form');
-const popupBody = document.querySelector('.popup-body');
-const popupContent = document.querySelector('.popup-content');
-const overlay = document.querySelector('.overlay')
-var chatData = []
-var chatIntervalId = null;
-var firstLoaded = null;
-
 popup.style.display = "none"
 
 document.getElementById("message").addEventListener("keydown", submitOnEnter);
@@ -120,12 +112,14 @@ const popupDiv = (item) => {
     popupTitle.innerHTML = `${item.title} Chat Room`
     popup.style.display = "block";
     popupBody.innerHTML = '';
-    getChatMessageByItemid(item.itemid);
-    chatIntervalId = setInterval(() => {
-        if (chatData !== []) {
-            getChatMessageByItemid(item.itemid);
-        }
-    }, 1000)
+    setTimeout(() => {
+        getChatMessageByItemid(item.itemid);
+        chatIntervalId = setInterval(() => {
+            if (chatData !== []) {
+                getChatMessageByItemid(item.itemid);
+            }
+        }, 1000)
+    }, 100)
 }
 
 

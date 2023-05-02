@@ -1,0 +1,27 @@
+var userid = '';
+var login = false;
+var itemsData = { items : [] };
+var courseData = {};
+var chatData = []
+var itemidsFromDB = [];
+var itemidsFromMCV = [];
+var userFullName = '';
+var dotCounter = 0;
+var timeLeftIntervalId = null;
+var chatIntervalId = null;
+var loadingIntervalId = null;
+var firstLoaded = null;
+var isUserInDB = false;
+
+const backendIPAddress = "127.0.0.1:3000";
+const container = document.querySelector('.container');
+const loadingInfo = document.querySelector('.loading-info');
+const closeBtn = document.getElementsByClassName("close")[0];
+const popupForm = document.getElementById('chat-form')
+const chatForm = document.getElementById('chat-form');
+const popupBody = document.querySelector('.popup-body');
+const popup = document.getElementById("popup");
+const popupContent = document.querySelector('.popup-content');
+const overlay = document.querySelector('.overlay');
+const contentBoxes = document.querySelectorAll('.content-box');
+const dropZones = document.querySelectorAll('.done-box, .ongoing-box, .all-box');
