@@ -246,6 +246,7 @@ body {
   height: auto;
   text-align: center;
   background-color: white;
+
   /* -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -703,7 +704,6 @@ body {
   z-index: 999;
   display: none;
 }
-
 
 @-webkit-keyframes animatebottom {
   from {
