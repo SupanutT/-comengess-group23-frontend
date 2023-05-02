@@ -35,6 +35,7 @@ const addNewUserInfoToDB = async () => {
 }
 
 const updateItemidsInDB = async (newItemids) => {
+    overlayAll.style.display = 'block'
     const options = {
         method: "PUT",
         credentials: "include",

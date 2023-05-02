@@ -22,6 +22,7 @@ const chatForm = document.getElementById('chat-form');
 const popupBody = document.querySelector('.popup-body');
 const popup = document.getElementById("popup");
 const popupContent = document.querySelector('.popup-content');
+const overlayAll = document.querySelector('.overlay-all');
 const overlay = document.querySelector('.overlay');
 const contentBoxes = document.querySelectorAll('.content-box');
 const dropZones = document.querySelectorAll('.done-box, .ongoing-box, .all-box');

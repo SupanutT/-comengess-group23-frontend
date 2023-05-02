@@ -5,6 +5,7 @@ window.onload = async () => {
   userid = await getUserID();
 
   loader(1);
+  overlayAll.style.display = 'block'
   await getUserInfoFromDB();
   await getCoursesFromMCV();
   if (!isUserInDB) {
@@ -18,6 +19,7 @@ window.onload = async () => {
 
   loader(2);
   clearInterval(loadingIntervalId)
+  overlayAll.style.display = 'none'
 }
 
 const reload = async () =>{
@@ -62,7 +64,7 @@ const reload = async () =>{
 
     let iconNav = document.createElement('div')
     iconNav.classList = ['iconNav-deleted']
-    iconNav.classList.add('open')
+    //iconNav.classList.add('open')
     iconNav.innerHTML = `<span></span><span></span><span></span>`
     iconNav.addEventListener('click', (event) => {
       iconNav.classList.toggle("open")
@@ -72,7 +74,7 @@ const reload = async () =>{
         courseDataBoxBody.style.display = 'none'
       }
     })
-
+    
     let courseDataBoxBody = document.createElement('div')
     courseDataBoxBody.id = `course-data-box-body-${cv_cid}`
     headerBoxLongAgoDiv.appendChild(headerBoxLongAgo)
@@ -80,10 +82,10 @@ const reload = async () =>{
     courseDataBoxHeader.appendChild(iconNav)
     newCourseDataBox.appendChild(courseDataBoxHeader)
     newCourseDataBox.appendChild(courseDataBoxBody)
-    //newCourseDataBox.innerHTML = `<h2 class="header-box-long-ago">${courseData[cv_cid].course_no} - ${courseData[cv_cid].title}</h2><br>`
-
-    newCourseDataBox.setAttribute("hidden", "hidden")
     longAgoDeletedBox.appendChild(newCourseDataBox)
+    
+    courseDataBoxBody.style.display = 'none'
+    newCourseDataBox.setAttribute("hidden", "hidden")
   }
   itemsData.items.sort((a, b) => a.due_date - b.due_date);
   const currentDate = new Date();
@@ -127,6 +129,8 @@ const reload = async () =>{
       const assignmentCourse = document.createElement('p');
       assignmentCourse.className = "content-course-name";
       assignmentCourse.innerHTML = item.course_name;
+      console.log(courseData[item.cv_cid].title)
+      assignmentCourse.setAttribute("data-hover", `${courseData[item.cv_cid].title}`)
       const assignmentDuedate = document.createElement('p');
       assignmentDuedate.className = "content-due-date";
       const assignmentTimeLeft = document.createElement('p');
@@ -317,7 +321,7 @@ const addItemToDB = async(itemid, title, cv_cid, course_name, duetime, status) =
     userFullName: userFullName,
     itemid: itemid,
     title: title,
-    cv_cid: cv_cid,
+    cv_cid: cv_cid, 
     course_name: course_name,
     duetime: duetime,
     status: status
@@ -347,6 +351,7 @@ const deleteItem = async(item_id) => {
 }
 
 const changeStatusDB = async (status, item_id) => {
+  overlayAll.style.display = 'block'
   clearInterval(timeLeftIntervalId)
 
   const options = {
@@ -372,6 +377,9 @@ const changeStatusDB = async (status, item_id) => {
       }
     })
   }, 1000);
+  setTimeout(() => {
+    overlayAll.style.display = 'none'
+  }, 1000)
   
 }
 

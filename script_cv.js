@@ -101,7 +101,7 @@ const addNewItemsFromMCV = async () => {
     let assignmentData = await getAssignmentsFromMCV(cv_cid)
     for (let itemid in assignmentData) {
       assignmentNums++
-      loadingInfo.innerHTML = `Fetching ${assignmentNums} assignment from ${courseNums} courses`
+      loadingInfo.innerHTML = `Fetching ${assignmentNums} assignments from ${courseNums} courses`
       newItemids.push(itemid)
       if (!itemidsFromDB.includes(itemid)) {
         await updateItemidsInDB(newItemids);

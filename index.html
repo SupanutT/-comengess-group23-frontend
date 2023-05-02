@@ -18,6 +18,7 @@
 </head>
 
 <body>
+    <div class="overlay-all"></div>
     <div id="loader">
         <div class="loading-text">Loading</div>
         <div class="loading-info" hidden="hidden"></div>
@@ -25,38 +26,38 @@
         <div class="loading-info" id="user-db" hidden="hidden">Loaing user information from the database</div>
         <div class="loading-info" id="assignment-mcv" hidden="hidden">Fetching <span id="assignment-no"></span>
             assignments from <span id="course-no"></span> courses</div> -->
-    </div>
-    <div id="start-app"></div>
-    <div id="login-first">
-        <h2 id="welcome">Welcome to ASSIGNMENT DEALER</h2>
-        <p id="login-text">Please login first</p>
-        <button id="login-button" onclick=authorizeApplication();>Login</button>
-    </div>
-
-    <div class="container">
-        <div id="header">
-            <p id="insert-name-here"></p>
-            <p class="between">|</p>
-            <p class="logout-button" onclick=logout()>Logout</p>
-            <!-- <p class="between">|</p> -->
-             <!-- <p class="fetch" onclick=postAllItems()>Fetch Data</p>
-            <button onclick=deleteAll()>Don't Click Me</button>  -->
         </div>
-        <h1 id="app-name">ASSIGNMENT DEALER</h1>
-        <div class="assignment">
-            <div class="all-box">
-                <div id="stripe"></div>
-                <h2 id="header-box">All Assignment</h2><br>
-            </div>
-            <div class="ongoing-box">
-                <div id="stripe"></div>
-                <h2 id="header-box">Ongoing Assignment</h2><br>
-            </div>
-            <div class="done-box">
-                <div id="stripe"></div>
-                <h2 id="header-box">Done Assignment</h2><br>
-            </div>
+        <div id="start-app"></div>
+        <div id="login-first">
+            <h2 id="welcome">Welcome to ASSIGNMENT DEALER</h2>
+            <p id="login-text">Please login first</p>
+            <button id="login-button" onclick=authorizeApplication();>Login</button>
         </div>
+        
+        <div class="container">
+            <div id="header">
+                <p id="insert-name-here"></p>
+                <p class="between">|</p>
+                <p class="logout-button" onclick=logout()>Logout</p>
+                <!-- <p class="between">|</p> -->
+                <!-- <p class="fetch" onclick=postAllItems()>Fetch Data</p>
+                    <button onclick=deleteAll()>Don't Click Me</button>  -->
+                </div>
+                <h1 id="app-name">ASSIGNMENT DEALER</h1>
+                <div class="assignment">
+                    <div class="all-box">
+                        <div id="stripe"></div>
+                        <h2 id="header-box">All Assignment</h2><br>
+                    </div>
+                    <div class="ongoing-box">
+                        <div id="stripe"></div>
+                        <h2 id="header-box">Ongoing Assignment</h2><br>
+                    </div>
+                    <div class="done-box">
+                        <div id="stripe"></div>
+                        <h2 id="header-box">Done Assignment</h2><br>
+                    </div>
+                </div>
         <div class="deleted-box">
             <h2 id="header-box-deleted">Deleted Items (click to restore):</h2><br>
             <div id="recently-deleted">

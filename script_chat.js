@@ -105,6 +105,7 @@ const getChatMessageByItemid = async (itemid) => {
 
 const popupDiv = (item) => {
     firstLoaded = true;
+    overlay.style.opacity = '0.5';
     overlay.style.display = 'block';
     clearInterval(chatIntervalId)
     const popupTitle = document.getElementById('popup-title')

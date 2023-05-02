@@ -38,6 +38,7 @@ function dragLeave(e) {
 
 async function drop(e) {
   e.preventDefault();
+  overlayAll.style.display = 'block'
 
   e.target.classList.remove('dragover');
 
