@@ -410,6 +410,7 @@ color: white;
 }
 
 #loader {
+  display: none;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -494,7 +495,7 @@ color: white;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 999;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
 }
