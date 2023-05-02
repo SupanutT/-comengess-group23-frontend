@@ -24,8 +24,6 @@ window.onload = async () => {
 
 const reload = async () =>{
   userFullName = await getUserName();
-  console.log("itemsData", itemsData)
-  console.log(userFullName);
   document.getElementById("insert-name-here").innerHTML = `Logged in as <span id="your-name" onclick=logout()>${userFullName}</span>`; 
   const allBox = document.getElementsByClassName("all-box")[0];
   const ongoingBox = document.getElementsByClassName("ongoing-box")[0];
@@ -99,7 +97,6 @@ const reload = async () =>{
         recentlyDeletedBox.appendChild(assignmentTitle);
       }
       else{
-        console.log(`deleted-subject-${item.cv_cid}`)
         let courseDataBox = document.getElementById(`deleted-subject-${item.cv_cid}`)
         let courseDataBoxBody = document.getElementById(`course-data-box-body-${item.cv_cid}`)
         courseDataBox.removeAttribute("hidden")
@@ -129,7 +126,6 @@ const reload = async () =>{
       const assignmentCourse = document.createElement('p');
       assignmentCourse.className = "content-course-name";
       assignmentCourse.innerHTML = item.course_name;
-      console.log(courseData[item.cv_cid].title)
       assignmentCourse.setAttribute("data-hover", `${courseData[item.cv_cid].title}`)
       const assignmentDuedate = document.createElement('p');
       assignmentDuedate.className = "content-due-date";
@@ -254,8 +250,6 @@ const getUserName = async () => {
     .then((response) => response.json())
     .then((data) => {
       userName = data.user.firstname_en+" "+data.user.lastname_en
-      console.log(data.user.firstname_en+" "+data.user.lastname_en)
-      console.log(data)
     })
     .catch((err) => console.error(err))
 
@@ -389,7 +383,6 @@ timeLeftIntervalId = setInterval(() => {
       if(item.status!="deleted") updateTimeLeft(item);
     } catch (err) {
       console.log(err)
-      console.log(item)
     }
   })
 }, 1000);
@@ -413,7 +406,6 @@ const getItemsTest = async() => {
     .then((data) => {
       fetchedData = data
       data.map((data) => {
-            console.log(data)
             itemsData.items.push({
               item_id: data.item_id,
               itemid: data.itemid,

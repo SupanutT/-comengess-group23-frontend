@@ -10,7 +10,6 @@ body {
   cursor: default;
 }
 
-
 #header {
   padding: 0.4em;
   width: 100%;
@@ -767,35 +766,6 @@ body {
     height: 30px;
     margin: 2px 5px 0px 12px;
   }
-
-  /* .iconNav-deleted span{
-    height: 2px;
-  }
-
-  .iconNav-deleted span:nth-child(2){
-    top:7px;
-    left: 0px;
-  }
-
-  .iconNav-deleted span:nth-child(3) {
-    bottom: 13px;
-    left: 0px;
-  }
-  
-  .iconNav-deleted.open span:nth-child(1){
-    transform: rotate(45deg) scaleX(0.7);
-    top: 13PX;
-    left: -4px;
-  }
-  .iconNav-deleted.open span:nth-child(2){
-    transform: scale(0);
-    transition-duration: 50ms
-  }
-  .iconNav-deleted.open span:nth-child(3){
-    transform: rotate(-45deg) scaleX(0.7);
-    top: 13PX;
-    left: 0px;
-  } */
 }
 
 .iconNav-deleted {

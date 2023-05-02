@@ -93,7 +93,6 @@ const getItemidsFromMCV = async (itemid) => {
 
 const addNewItemsFromMCV = async () => {
   let newItemids = [];
-  console.log(itemidsFromDB)
   let courseNums = Object.keys(courseData).length
   let assignmentNums = 0
   loadingInfo.innerHTML = `Fetching ${assignmentNums} assignment from ${courseNums} courses`
