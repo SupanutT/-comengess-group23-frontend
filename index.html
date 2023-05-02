@@ -6,22 +6,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    
+    <script src="fileStore.js" defer></script>
     <script src="script_cv.js" defer></script>
     <script src="script_item.js" defer></script>
     <script src="script_chat.js" defer></script>
+    <script src="script_user.js" defer></script>
     <script src="drag_and_drop.js" defer></script>
     <title>ASSIGNMENT DEALER</title>
+    <link rel="icon" type="image/x-icon/"  href="/images/favicon.ico">
 </head>
 
 <body>
     <div id="loader">
         <div class="loading-text">Loading</div>
-        <div class="loading-info" id="assignment-db" hidden="hidden">Fetching data from the database</div>
+        <div class="loading-info" hidden="hidden"></div>
+        <!-- <div class="loading-info" id="assignment-db" hidden="hidden">Loading data from the database</div>
+        <div class="loading-info" id="user-db" hidden="hidden">Loaing user information from the database</div>
         <div class="loading-info" id="assignment-mcv" hidden="hidden">Fetching <span id="assignment-no"></span>
-            assignments from <span id="course-no"></span> courses</div>
+            assignments from <span id="course-no"></span> courses</div> -->
     </div>
     <div id="start-app"></div>
     <div id="login-first">
+        <h2 id="welcome">Welcome to ASSIGNMENT DEALER</h2>
         <p id="login-text">Please login first</p>
         <button id="login-button" onclick=authorizeApplication();>Login</button>
     </div>
@@ -31,8 +38,9 @@
             <p id="insert-name-here"></p>
             <p class="between">|</p>
             <p class="logout-button" onclick=logout()>Logout</p>
-            <p class="between">|</p>
-            <p class="fetch" onclick=postAllItems()>Fetch Data</p>
+            <!-- <p class="between">|</p> -->
+             <!-- <p class="fetch" onclick=postAllItems()>Fetch Data</p>
+            <button onclick=deleteAll()>Don't Click Me</button>  -->
         </div>
         <h1 id="app-name">ASSIGNMENT DEALER</h1>
         <div class="assignment">
@@ -51,6 +59,12 @@
         </div>
         <div class="deleted-box">
             <h2 id="header-box-deleted">Deleted Items (click to restore):</h2><br>
+            <div id="recently-deleted">
+                <h2 id="header-box-deleted">Recently (overdue less than five days)</h2><br>
+            </div>
+            <div id="long-ago-deleted">
+                <h2 id="header-box-deleted">Long Ago (overdue more than five days)</h2><br>
+            </div>
         </div>
     </div>
     <div class="overlay"></div>

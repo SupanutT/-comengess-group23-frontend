@@ -1,11 +1,8 @@
-const contentBoxes = document.querySelectorAll('.content-box');
-
 contentBoxes.forEach((contentBox) => {
   contentBox.addEventListener('dragstart', dragStart);
   contentBox.addEventListener('dragend', dragEnd);
 });
 
-const dropZones = document.querySelectorAll('.done-box, .ongoing-box, .all-box');
 dropZones.forEach((dropZone) => {
   dropZone.addEventListener('dragover', dragOver);
   dropZone.addEventListener('dragenter', dragEnter);
@@ -49,5 +46,5 @@ async function drop(e) {
   if (this.classList.value === 'done-box') status = 'done'
 
   await changeStatusDB(status, draggedElement.id)
-  await getItems(userid)
+  await getAllItemsInDB(userid)
 }
