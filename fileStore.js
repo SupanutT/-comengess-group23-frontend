@@ -17,7 +17,7 @@ var firstLoaded = null;
 var isUserInDB = false;
 var isDrag = false;
 
-const backendIPAddress = "127.0.0.1:3000";
+const backendIPAddress = "54.198.100.198:3000";
 const container = document.querySelector('.container');
 const loadingInfo = document.querySelector('.loading-info');
 const closeBtn = document.getElementsByClassName("close")[0];
