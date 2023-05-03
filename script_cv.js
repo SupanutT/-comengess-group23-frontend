@@ -134,15 +134,27 @@ const showNotification = (number) => {
   if (number === 0) {
     textToShow = `Congrats! You don't have new assignment`
   }
-  if ("Notification" in window) {
-    if (Notification.permission === "granted") {
-      var notification = new Notification(textToShow);
-    } else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then(function (permission) {
-        if (permission === "granted") {
-          var notification = new Notification(textToShow);
-        }
-      });
-    }
-  }
+  var notificationElement = document.createElement("div");
+  notificationElement.className = "notification";
+
+  var titleElement = document.createElement("div");
+  titleElement.className = "notification-title";
+  titleElement.textContent = `Hello, ${userFullName}!`;
+
+  var messageElement = document.createElement("div");
+  messageElement.className = "notification-message";
+  messageElement.textContent = textToShow;
+
+  var closeElement = document.createElement("div");
+  closeElement.className = "notification-close";
+  closeElement.textContent = "×";
+  closeElement.addEventListener("click", function () {
+    notificationElement.parentNode.removeChild(notificationElement);
+  });
+
+  notificationElement.appendChild(closeElement);
+  notificationElement.appendChild(titleElement);
+  notificationElement.appendChild(messageElement);
+  container.appendChild(notificationElement)
+  dragStartAudio.play()
 }
