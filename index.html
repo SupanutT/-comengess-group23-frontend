@@ -1,55 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    
+    <script src="fileStore.js" defer></script>
     <script src="script_cv.js" defer></script>
     <script src="script_item.js" defer></script>
+    <script src="script_chat.js" defer></script>
+    <script src="script_user.js" defer></script>
     <script src="drag_and_drop.js" defer></script>
+
+    <audio id="dragStartAudio">
+        <source src="audios/dragStartAudio.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="dragEndAudio">
+        <source src="audios/dragEndAudio.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="deleteAudio">
+        <source src="audios/deleteAudio.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="notiAudio">
+        <source src="audios/notiAudio.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+
+
     <title>ASSIGNMENT DEALER</title>
+    <link rel="icon" type="image/x-icon/"  href="/images/favicon.ico">
 </head>
+
 <body>
+    <div class="overlay-all"></div>
     <div id="loader">
         <div class="loading-text">Loading</div>
-        <div class="loading-info" id="assignment-db" hidden="hidden">Fetching data from the database</div>
-        <div class="loading-info" id="assignment-mcv" hidden="hidden">Fetching <span id="assignment-no"></span> assignments from <span id="course-no"></span> courses</div>
-    </div>
-    <div id="start-app"></div>
-    <div id="login-first">
-        <p id="login-text">Please login first</p>
-        <button id="login-button" onclick=authorizeApplication();>Login</button>
-    </div>
-    <!-- <button onclick=getUserID()>USER ID</button>
-    <button onclick=getItemsTest()>TEST GET</button>
-    <button onclick=deleteAll()>DELETE ALL</button>
-    <button onclick=postAllItems()>POST ALL</button> -->
-    <div id="header">
-        <p id="insert-name-here"></p>
-        <p class="between">|</p>
-        <p class="logout-button" onclick=logout()>Logout</p>
-        <p class="between">|</p>
-        <p class="fetch" onclick=postAllItems()>Fetch Data</p>
-    </div>
-    <h1 id="app-name">ASSIGNMENT DEALER</h1>
-    <div class="container">
-        <div class="assignment">
-            <div class="all-box">
-                <div id="stripe"></div>
-                <h2 id="header-box">All Assignment</h2><br>
-            </div>
-            <div class="ongoing-box">
-                <div id="stripe"></div>
-                <h2 id="header-box">Ongoing Assignment</h2><br>
-            </div>
-            <div class="done-box">
-                <div id="stripe"></div>
-                <h2 id="header-box">Done Assignment</h2><br>
-            </div>
-        </div> 
+        <div class="loading-info" hidden="hidden"></div>
+        <!-- <div class="loading-info" id="assignment-db" hidden="hidden">Loading data from the database</div>
+        <div class="loading-info" id="user-db" hidden="hidden">Loaing user information from the database</div>
+        <div class="loading-info" id="assignment-mcv" hidden="hidden">Fetching <span id="assignment-no"></span>
+            assignments from <span id="course-no"></span> courses</div> -->
+        </div>
+        <div id="start-app"></div>
+        <div id="login-first">
+            <h2 id="welcome">Welcome to ASSIGNMENT DEALER</h2>
+            <p id="login-text">Please login first</p>
+            <button id="login-button" onclick=authorizeApplication();>Login</button>
+        </div>
+        
+        <div class="container">
+            <div id="header">
+                <p id="insert-name-here"></p>
+                <p class="between">|</p>
+                <p class="logout-button" onclick=logout()>Logout</p>
+                <!-- <p class="between">|</p> -->
+                <!-- <p class="fetch" onclick=postAllItems()>Fetch Data</p>
+                    <button onclick=deleteAll()>Don't Click Me</button>  -->
+                </div>
+                <h1 id="app-name">ASSIGNMENT DEALER</h1>
+                <div class="assignment">
+                    <div class="all-box">
+                        <div id="stripe"></div>
+                        <h2 id="header-box">All Assignment</h2><br>
+                    </div>
+                    <div class="ongoing-box">
+                        <div id="stripe"></div>
+                        <h2 id="header-box">Ongoing Assignment</h2><br>
+                    </div>
+                    <div class="done-box">
+                        <div id="stripe"></div>
+                        <h2 id="header-box">Done Assignment</h2><br>
+                    </div>
+                </div>
         <div class="deleted-box">
             <h2 id="header-box-deleted">Deleted Items (click to restore):</h2><br>
+            <div id="recently-deleted">
+                <h2 id="header-box-deleted">Recently (overdue less than five days)</h2><br>
+            </div>
+            <div id="long-ago-deleted">
+                <h2 id="header-box-deleted">Long Ago (overdue more than five days)</h2><br>
+            </div>
+        </div>
+    </div>
+    <div class="overlay"></div>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2 id="popup-title"></h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="popup-body">
+            </div>
+            <div class="popup-footer">
+                <form action="/chats" method="POST" id="chat-form">
+                    <div class="chat-form">
+                        <textarea name="message" id="message" cols="30" rows="2" placeholder="Message"
+                            required></textarea>
+                        <button type="submit" id="submit-button">Send</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </body>

@@ -1,11 +1,8 @@
-const contentBoxes = document.querySelectorAll('.content-box');
-
 contentBoxes.forEach((contentBox) => {
   contentBox.addEventListener('dragstart', dragStart);
   contentBox.addEventListener('dragend', dragEnd);
 });
 
-const dropZones = document.querySelectorAll('.done-box, .ongoing-box, .all-box');
 dropZones.forEach((dropZone) => {
   dropZone.addEventListener('dragover', dragOver);
   dropZone.addEventListener('dragenter', dragEnter);
@@ -17,6 +14,8 @@ let draggedElement = null;
 let draggedElementParent = null;
 
 function dragStart() {
+  dragStartAudio.play();
+  isDrag = true;
   draggedElement = this;
   draggedElementParent = this.parentNode;
 
@@ -24,6 +23,7 @@ function dragStart() {
 }
 
 function dragEnd() {
+  dragEndAudio.play()
   this.classList.remove('dragging');
 }
 
@@ -41,6 +41,7 @@ function dragLeave(e) {
 
 async function drop(e) {
   e.preventDefault();
+  overlayAll.style.display = 'block'
 
   e.target.classList.remove('dragover');
 
@@ -49,5 +50,5 @@ async function drop(e) {
   if (this.classList.value === 'done-box') status = 'done'
 
   await changeStatusDB(status, draggedElement.id)
-  await getItems(userid)
+  await getAllItemsInDB(userid)
 }
