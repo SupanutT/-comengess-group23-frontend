@@ -14,6 +14,8 @@ let draggedElement = null;
 let draggedElementParent = null;
 
 function dragStart() {
+  dragStartAudio.play();
+  isDrag = true;
   draggedElement = this;
   draggedElementParent = this.parentNode;
 
@@ -21,6 +23,7 @@ function dragStart() {
 }
 
 function dragEnd() {
+  dragEndAudio.play()
   this.classList.remove('dragging');
 }
 

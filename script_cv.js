@@ -38,9 +38,9 @@ const getCoursesFromMCV = async () => {
     })
     .catch((err) => console.log(err));
 
-    for (let cv_cid in courseData) {
-      await getCourseDetailFromMCV(cv_cid)
-    }
+  for (let cv_cid in courseData) {
+    await getCourseDetailFromMCV(cv_cid)
+  }
 
 };
 
@@ -99,7 +99,7 @@ const addNewItemsFromMCV = async () => {
   for (let cv_cid in courseData) {
     let assignmentData = await getAssignmentsFromMCV(cv_cid)
     for (let itemid in assignmentData) {
-      assignmentNums++
+      assignmentNums++;
       loadingInfo.innerHTML = `Fetching ${assignmentNums} assignments from ${courseNums} courses`
       newItemids.push(itemid)
       if (!itemidsFromDB.includes(itemid)) {
@@ -108,6 +108,8 @@ const addNewItemsFromMCV = async () => {
         let status = "all"
         if (Date.now() - assignmentInfo.duetime * 1000 > 0) {
           status = "deleted"
+        } else {
+          newAssignmentCount++;
         }
         await addItemToDB(
           itemid,
@@ -126,3 +128,21 @@ const addNewItemsFromMCV = async () => {
 const logout = async () => {
   window.location.href = `http://${backendIPAddress}/courseville/logout`;
 };
+
+const showNotification = (number) => {
+  let textToShow = `You have ${number} new assignment(s)`
+  if (number === 0) {
+    textToShow = `Congrats! You don't have new assignment`
+  }
+  if ("Notification" in window) {
+    if (Notification.permission === "granted") {
+      var notification = new Notification(textToShow);
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(function (permission) {
+        if (permission === "granted") {
+          var notification = new Notification(textToShow);
+        }
+      });
+    }
+  }
+}

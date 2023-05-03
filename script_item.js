@@ -20,6 +20,7 @@ window.onload = async () => {
   loader(2);
   clearInterval(loadingIntervalId)
   overlayAll.style.display = 'none'
+  showNotification(newAssignmentCount)
 }
 
 const reload = async () =>{
@@ -65,6 +66,7 @@ const reload = async () =>{
     //iconNav.classList.add('open')
     iconNav.innerHTML = `<span></span><span></span><span></span>`
     iconNav.addEventListener('click', (event) => {
+      dragStartAudio.play();
       iconNav.classList.toggle("open")
       if (iconNav.classList.contains("open")) {
         courseDataBoxBody.style.display = 'block'
@@ -92,7 +94,10 @@ const reload = async () =>{
       const assignmentTitle = document.createElement('button');
       assignmentTitle.className = "content-title-deleted";
       assignmentTitle.innerHTML = `<h3>${item.title}</h3>`;
-      assignmentTitle.onclick = () => changeStatusDB("all", item.item_id);
+      assignmentTitle.onclick = () => {
+        dragStartAudio.play();
+        changeStatusDB("all", item.item_id);
+      }
       if (Date.now() - item.due_date * 1000 < 5 * 24 * 60 * 60 * 1000){
         recentlyDeletedBox.appendChild(assignmentTitle);
       }
@@ -114,7 +119,10 @@ const reload = async () =>{
       decoration.id = "decoration"
       decorationAndDeleteButton.appendChild(decoration);
       const deleteButton = document.createElement('button');
-      deleteButton.onclick = () => changeStatusDB("deleted", item.item_id);
+      deleteButton.onclick = () => {
+        dragStartAudio.play();
+        changeStatusDB("deleted", item.item_id);
+      }
       deleteButton.innerHTML = "Delete";
       deleteButton.id = "deleteButton"
       decorationAndDeleteButton.appendChild(deleteButton);
@@ -144,22 +152,33 @@ const reload = async () =>{
 
       const buttonOngoing = document.createElement('button');
       buttonOngoing.id = "move-to-ongoing";
-      buttonOngoing.onclick = () => changeStatusDB("ongoing", item.item_id);
+      buttonOngoing.onclick = () => {
+        dragStartAudio.play();
+        changeStatusDB("ongoing", item.item_id);
+      }
       buttonOngoing.innerHTML = "MOVE TO ONGOING";
 
       const buttonDone = document.createElement('button');
       buttonDone.id = "move-to-done";
       buttonDone.innerHTML = "MOVE TO DONE"
-      buttonDone.onclick = () => changeStatusDB("done", item.item_id);
-
+      buttonDone.onclick = () => {
+        dragStartAudio.play();
+        changeStatusDB("done", item.item_id);
+      }
       const buttonAll = document.createElement('button');
       buttonAll.id = "move-to-all";
-      buttonAll.onclick = () => changeStatusDB("all", item.item_id);
+      buttonAll.onclick = () => {
+        dragStartAudio.play();
+        changeStatusDB("all", item.item_id);
+      }
       buttonAll.innerHTML = "MOVE TO ALL";
 
       const buttonChat = document.createElement('button');
       buttonChat.id = "chat-button"
-      buttonChat.onclick = () => popupDiv(item);
+      buttonChat.onclick = () => {
+        dragStartAudio.play();
+        popupDiv(item);
+      }
       buttonChat.innerHTML = "CHAT"
 
       const buttonDiv = document.createElement('div');
@@ -361,6 +380,12 @@ const changeStatusDB = async (status, item_id) => {
 
   await getAllItemsInDB();
   await reload()
+  if (status === 'deleted') {
+    deleteAudio.play();
+  } else if (!isDrag) {
+    dragEndAudio.play();
+  }
+  isDrag = false
 
   timeLeftIntervalId = setInterval(() => {
     itemsData.items.map((item) => {

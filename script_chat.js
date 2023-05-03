@@ -125,6 +125,7 @@ const popupDiv = (item) => {
 
 
 closeBtn.onclick = function () {
+    dragStartAudio.play();
     closePopup();
 }
 
